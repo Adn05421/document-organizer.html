@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>منظّم المستندات</title>
+<style>
+:root{--bg:#121212;--card:#1c1c1c;--bd:#2a2a2a;--pri:#1a73e8;--ok:#1a3a2a;--okb:#1f9d55;--tx:#fff;--tx2:#9aa0a6;--dr:#0f172a;--warn:#f59e0b;--bad:#ef4444}
+body.light{--bg:#f4f6f9;--card:#fff;--bd:#dfe3e8;--ok:#e3f6ea;--tx:#1b1f24;--tx2:#5f6368;--dr:#0f172a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Tajawal,Cairo,system-ui,"Segoe UI",Arial,sans-serif;transition:background .25s,color .25s}
+button,input,select,textarea{font:inherit;color:inherit}
+#top{position:fixed;top:0;inset-inline:0;height:58px;background:var(--bg);border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;padding:0 10px;z-index:30}
+.ib{min-width:44px;height:44px;border:0;background:none;font-size:22px;cursor:pointer;border-radius:12px}
+#q{flex:1;min-width:0;height:42px;border-radius:21px;border:1px solid var(--bd);background:var(--card);padding:0 14px;outline:none}
+#main{padding:72px 14px 100px;max-width:760px;margin:auto}
+h2{margin:6px 0 12px;font-size:22px}h3{margin:18px 0 8px;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
+.qa{min-height:76px;background:var(--card);border:1px solid var(--bd);border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px;padding:6px;transition:transform .2s}
+.qa:active{transform:scale(.96)}.qa b{font-size:26px}.qa.p{background:var(--pri);border-color:var(--pri);color:#fff}
+.st{position:relative;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px 10px;min-height:92px;cursor:pointer}
+.st i{position:absolute;top:8px;inset-inline-start:auto;inset-inline-end:8px;font-style:normal;font-size:22px}
+.st b{display:block;font-size:22px;margin-top:22px;overflow-wrap:anywhere}.st span{font-size:12px;color:var(--tx2)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 1px 4px #0003}
+.doc{cursor:pointer}.doc .n{font-weight:700;overflow-wrap:anywhere}.meta{font-size:12px;color:var(--tx2);margin-top:4px}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;margin-top:6px;background:var(--ok);border:1px solid var(--okb)}
+.badge.w{background:#3a2a0a;border-color:var(--warn)}.badge.r{background:#3a1212;border-color:var(--bad)}
+.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.acts button,.btn{min-height:44px;min-width:44px;border:1px solid var(--bd);background:transparent;border-radius:12px;cursor:pointer;padding:0 12px}
+.btn.p{background:var(--pri);border-color:var(--pri);color:#fff}.btn.d{border-color:var(--bad);color:var(--bad)}
+.sync{border:2px solid var(--okb);background:var(--ok)}.sync.w{border-color:var(--warn);background:#3a2a0a}
+body.light .sync.w,body.light .badge.w{background:#fff3d6}body.light .badge.r{background:#fde4e4}
+#fab{position:fixed;bottom:20px;left:18px;width:58px;height:58px;border-radius:50%;border:0;background:var(--pri);color:#fff;font-size:26px;z-index:25;box-shadow:0 4px 12px #0006;cursor:pointer}
+#fm{position:fixed;bottom:88px;left:18px;background:var(--card);border:1px solid var(--bd);border-radius:14px;z-index:25;display:none;overflow:hidden}
+#fm button{display:block;width:100%;min-height:46px;padding:0 18px;border:0;background:none;text-align:start;cursor:pointer}
+#ov{position:fixed;inset:0;background:#0009;z-index:40;opacity:0;pointer-events:none;transition:opacity .25s}
+#dr{position:fixed;top:0;bottom:0;inset-inline-start:auto;right:0;width:min(55%,280px);min-width:220px;background:var(--dr);color:#fff;z-index:41;transform:translateX(100%);visibility:hidden;transition:transform .25s,visibility .25s;overflow:auto;padding-top:10px}
+body.open #dr{transform:none;visibility:visible}body.open #ov{opacity:1;pointer-events:auto}
+#dr a{display:flex;align-items:center;gap:10px;min-height:48px;padding:0 16px;cursor:pointer;border-inline-end:4px solid transparent;font-size:15px}
+#dr a.on{background:#ffffff1f;border-inline-end-color:var(--pri)}
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#fff;color:#111;padding:10px 22px;border-radius:22px;z-index:60;display:none;box-shadow:0 2px 10px #0006}
+#md{position:fixed;inset:0;background:#000a;z-index:50;display:none;align-items:center;justify-content:center;padding:16px}
+#md>div{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px;width:100%;max-width:400px;max-height:90vh;overflow:auto}
+#md label{display:block;font-size:13px;color:var(--tx2);margin:8px 0 3px}
+#md input,#md select,#md textarea{width:100%;min-height:42px;border:1px solid var(--bd);background:var(--bg);border-radius:10px;padding:6px 10px}
+.empty{text-align:center;color:var(--tx2);padding:30px 10px}
+iframe,.pv img{width:100%;border:0;border-radius:12px;background:#fff}iframe{height:60vh}.pv img{background:none}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--bg);padding:10px;border-radius:10px;max-height:60vh;overflow:auto}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden}.bar div{height:100%;background:var(--pri)}
+.crumb{font-size:13px;color:var(--tx2);margin-bottom:8px}.crumb a{color:var(--pri);cursor:pointer}
+</style>
+</head>
+<body>
+<div id="top">
+ <button class="ib" data-a="menu" aria-label="القائمة">☰</button>
+ <input id="q" type="search" placeholder="بحث في الملفات والمجلدات والوسوم...">
+ <button class="ib" data-a="theme" aria-label="السمة">🌗</button>
+</div>
+<div id="ov" data-a="close"></div>
+<nav id="dr"></nav>
+<div id="main"></div>
+<button id="fab" data-a="fab">➕</button>
+<div id="fm"><button data-a="addFile">📄 إضافة ملف</button><button data-a="addImg">🖼️ إضافة صورة</button><button data-a="scan">📷 مسح مستند</button><button data-a="newFolder">📁 مجلد جديد</button></div>
+<div id="toast">تم الحفظ</div>
+<div id="md"><div id="mb"></div></div>
+<input type="file" id="fIn" multiple hidden>
+<input type="file" id="iIn" accept="image/*" multiple hidden>
+<input type="file" id="sIn" accept="image/*" capture="environment" hidden>
+<input type="file" id="bIn" accept=".json,application/json" hidden>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const NAV=[["home","🏠","الرئيسية"],["files","📁","الملفات والمجلدات"],["renew","🔄","التجديدات"],["fav","⭐","المفضلة"],["pin","📌","الوصول السريع"],["trash","🗑️","سلة المحذوفات"],["log","📋","سجل النشاط"],["share","📤","مشاركة عبر واتساب"],["storage","💾","التخزين"],["status","📊","حالة التطبيق"],["settings","⚙️","الإعدادات"]];
+let DB={v:1,files:[],folders:[],log:[],prefs:{theme:"dark",email:"",lastBackup:null,dirty:false,backupSize:0}};
+let S={view:"home",folder:null,id:null,q:"",sel:new Set()},idb,pvURL=null;
+/* ---------- IndexedDB ---------- */
+function open(){return new Promise((res,rej)=>{const r=indexedDB.open("docorg",1);r.onupgradeneeded=()=>{r.result.createObjectStore("meta");r.result.createObjectStore("blobs")};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+const MEM={meta:{},blobs:{}};
+const tx=(st,m,fn)=>!idb?Promise.resolve((fn({put:(v,k)=>{MEM[st][k]=v},get:k=>({result:MEM[st][k]}),delete:k=>{delete MEM[st][k]},clear:()=>{MEM[st]={}}})||{}).result):new Promise((res,rej)=>{const t=idb.transaction(st,m),o=fn(t.objectStore(st));t.oncomplete=()=>res(o&&o.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)});
+const saveMeta=()=>tx("meta","readwrite",s=>s.put(DB,"db"));
+const getBlob=id=>tx("blobs","readonly",s=>s.get(id));
+async function commit(msg,silent){DB.prefs.dirty=true;try{await saveMeta();if(!silent)toast()}catch(e){alert("تعذّر الحفظ: التخزين غير متاح أو ممتلئ")}render()}
+/* ---------- helpers ---------- */
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const pad=n=>String(n).padStart(2,"0");
+const fmtD=t=>{const d=new Date(t);return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`};
+const size=b=>b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(2)+" MB";
+function rel(t){const m=Math.floor((Date.now()-t)/6e4);if(m<1)return"الآن";if(m<60)return`منذ ${m} دقيقة`;const h=Math.floor(m/60);if(h<24)return`منذ ${h} ساعات`;return`منذ ${Math.floor(h/24)} يوم`}
+function days(f){if(!f.exp)return null;const e=new Date(f.exp+"T00:00:00"),n=new Date();n.setHours(0,0,0,0);return Math.round((e-n)/864e5)}
+function toast(m){const t=$("#toast");t.textContent=m||"تم الحفظ";t.style.display="block";clearTimeout(t._h);t._h=setTimeout(()=>t.style.display="none",1600)}
+function log(type,desc){DB.log.unshift({id:uid(),type,desc,t:Date.now()})}
+const live=()=>DB.files.filter(f=>!f.del),fld=id=>DB.folders.find(x=>x.id===id),F=id=>DB.files.find(f=>f.id===id);
+const path=id=>{const a=[];let c=fld(id);while(c){a.unshift(c.name);c=fld(c.parent)}return a.join(" / ")||"الرئيسية"};
+function modal(html,ok,okText){$("#mb").innerHTML=html+`<div class="acts"><button class="btn p" id="mok">${okText||"حفظ"}</button><button class="btn" id="mno">إلغاء</button></div>`;$("#md").style.display="flex";$("#mno").onclick=closeM;$("#mok").onclick=async()=>{if(await ok()!==false)closeM()}}
+function closeM(){$("#md").style.display="none"}
+const val=i=>($("#"+i)||{}).value||"";
+const folderOpts=(sel,ex)=>`<option value="">📁 الرئيسية</option>`+DB.folders.filter(x=>!x.del&&x.id!==ex).map(x=>`<option value="${x.id}" ${x.id===sel?"selected":""}>${esc(path(x.id))}</option>`).join("");
+/* ---------- rendering ---------- */
+function docCard(f,extra){const d=days(f),sync=DB.prefs.lastBackup&&DB.prefs.lastBackup>=f.mod;
+return `<div class="card doc" data-a="open" data-id="${f.id}"><div class="n">${esc(f.name)}</div>
+<div class="meta">${size(f.size)} • ${fmtD(f.added)} • ${rel(f.added)}${f.folder?" • 📁 "+esc(fld(f.folder)?.name||""):""}</div>
+<span class="badge ${sync?"":"w"}">${sync?"☁️ تمت المزامنة (نسخة احتياطية)":"⏳ لم تُحفظ في نسخة احتياطية"}</span>
+${f.tags.length?`<div class="meta">🏷️ ${f.tags.map(esc).join("، ")}</div>`:""}${extra||""}
+<div class="acts"><button data-a="del" data-id="${f.id}">🗑️</button><button data-a="wa" data-id="${f.id}">📤</button><button data-a="goFolder" data-id="${f.id}">📂</button><button data-a="edit" data-id="${f.id}">✏️</button><button data-a="pin" data-id="${f.id}">${f.pin?"📌":"📍"}</button><button data-a="fav" data-id="${f.id}">${f.fav?"⭐":"☆"}</button></div></div>`}
+const list=(a,m)=>a.length?a.map(docCard).join(""):`<div class="empty">${m||"لا توجد مستندات"}</div>`;
+function reminders(){const L=live().map(f=>[f,days(f)]).filter(x=>x[1]!==null);const ex=L.filter(x=>x[1]<0),so=L.filter(x=>x[1]>=0&&x[1]<=30);
+return ex.length||so.length?`<div class="card" style="border-color:var(--warn)">🔔 ${ex.length?`<b>${ex.length}</b> مستند منتهٍ`:""} ${ex.length&&so.length?"و":""} ${so.length?`<b>${so.length}</b> ينتهي خلال 30 يومًا`:""}</div>`:""}
+async function storageInfo(){let u=0,q=0;try{if(navigator.storage?.estimate){const e=await navigator.storage.estimate();u=e.usage||0;q=e.quota||0}}catch(e){}return{u,q}}
+function render(){
+ document.body.classList.toggle("light",DB.prefs.theme==="light");
+ $("#dr").innerHTML=NAV.map(n=>`<a data-a="go" data-id="${n[0]}" class="${S.view===n[0]?"on":""}"><span>${n[1]}</span>${n[2]}</a>`).join("");
+ let h="";const L=live(),m=$("#main");
+ if(S.q.trim()){const q=S.q.trim().toLowerCase();
+  const rf=L.filter(f=>(f.name+" "+f.tags.join(" ")+" "+(f.notes||"")+" "+(f.desc||"")+" "+path(f.folder)).toLowerCase().includes(q));
+  const rd=DB.folders.filter(x=>!x.del&&x.name.toLowerCase().includes(q));
+  h=`<h2>🔍 نتائج البحث</h2>`+rd.map(x=>`<div class="card" data-a="openFolder" data-id="${x.id}">📁 ${esc(path(x.id))}</div>`).join("")+list(rf,"لا نتائج مطابقة");m.innerHTML=h;return}
+ switch(S.view){
+ case"home":{const ex=L.filter(f=>f.exp),exp30=ex.filter(f=>{const d=days(f);return d>=0&&d<=30}),del=DB.files.filter(f=>f.del).length+DB.folders.filter(x=>x.del).length,p=DB.prefs,dirty=p.dirty;
+  h=`<h2>🏠 الرئيسية</h2>${idb?"":`<div class="card" style="border-color:var(--warn)">⚠️ التخزين الدائم غير متاح في هذه البيئة (مثل المعاينة داخل Claude). البيانات مؤقتة وستضيع عند الإغلاق. افتح الملف في Chrome أو WebView لتعمل كل الميزات.</div>`}${reminders()}<div class="grid">
+  <button class="qa p" data-a="addFile"><b>➕</b>إضافة ملف</button><button class="qa" data-a="scan"><b>📷</b>مسح مستند</button><button class="qa" data-a="addImg"><b>🖼️</b>إضافة صورة</button>
+  <button class="qa" data-a="newFolder"><b>📁</b>مجلد جديد</button><button class="qa" data-a="focusQ"><b>🔍</b>بحث</button><button class="qa" data-a="go" data-id="fav"><b>⭐</b>المفضلة</button>
+  <button class="qa" data-a="go" data-id="trash"><b>🗑️</b>سلة المحذوفات</button><button class="qa" data-a="go" data-id="share"><b>📤</b>مشاركة واتساب</button></div>
+  <h3>📊 الإحصائيات</h3><div class="grid">
+  ${[["📄",L.length,"إجمالي المستندات","files"],["📁",DB.folders.filter(x=>!x.del).length,"إجمالي المجلدات","files"],["🔄",ex.length,"مستندات للتجديد","renew"],["⚠️",exp30.length,"تنتهي خلال 30 يومًا","renew"],["⭐",L.filter(f=>f.fav).length,"المفضلة","fav"],["🗑️",del,"المحذوفات","trash"]].map(s=>`<div class="st" data-a="go" data-id="${s[3]}"><i>${s[0]}</i><b>${s[1]}</b><span>${s[2]}</span></div>`).join("")}
+  <div class="st" data-a="go" data-id="storage"><i>💾</i><b id="drv" style="font-size:14px">${p.email?esc(p.email):"غير متصل"}</b><span>Google Drive: ${p.email?"بريد يدوي (غير موثّق)":"غير متصل"}</span></div>
+  <div class="st" data-a="go" data-id="status"><i>☁️</i><b style="font-size:14px">${dirty?"معلّقة":"محدّثة"}</b><span>المزامنة والنسخ</span></div></div>
+  <h3>☁️ حالة النسخ الاحتياطي</h3><div class="card sync ${dirty?"w":""}">${dirty?"⚠️ توجد تغييرات غير محفوظة":"☁️ تمت المزامنة"}<div class="meta">آخر نسخة احتياطية: ${p.lastBackup?fmtD(p.lastBackup):"لم تُنشأ بعد"}</div><div class="acts"><button class="btn p" data-a="export">💾 نسخة احتياطية الآن</button></div></div>
+  <h3>🕐 الملفات الأخيرة</h3>${list([...L].sort((a,b)=>b.mod-a.mod).slice(0,8),"لا توجد ملفات بعد — اضغط ➕ لإضافة أول مستند")}`;break}
+ case"files":{const cur=S.folder,fs=DB.folders.filter(x=>!x.del&&x.parent===cur),ds=L.filter(f=>f.folder===cur);
+  const cr=[`<a data-a="openFolder" data-id="">الرئيسية</a>`];{let c=cur,a=[];while(c){a.unshift(c);c=fld(c)?.parent}a.forEach(i=>cr.push(`<a data-a="openFolder" data-id="${i}">${esc(fld(i).name)}</a>`))}
+  h=`<h2>📁 الملفات والمجلدات</h2><div class="crumb">${cr.join(" ‹ ")}</div><div class="acts" style="margin:0 0 10px"><button class="btn p" data-a="addFile">➕ ملف</button><button class="btn" data-a="newFolder">📁 مجلد</button></div>`+
+  fs.map(x=>{const n=DB.files.filter(f=>!f.del&&f.folder===x.id).length;return `<div class="card doc" data-a="openFolder" data-id="${x.id}"><div class="n">📁 ${esc(x.name)}</div><div class="meta">${n} مستند • ${DB.folders.filter(y=>!y.del&&y.parent===x.id).length} مجلد فرعي</div><div class="acts"><button data-a="renF" data-id="${x.id}">✏️</button><button data-a="pinF" data-id="${x.id}">${x.pin?"📌":"📍"}</button><button data-a="movF" data-id="${x.id}">↪️</button><button data-a="delF" data-id="${x.id}">🗑️</button></div></div>`}).join("")+list(ds,fs.length?"":"المجلد فارغ");break}
+ case"renew":{const A=L.filter(f=>f.exp).sort((a,b)=>days(a)-days(b)),B=L.filter(f=>!f.exp);
+  const row=f=>{const d=days(f),c=d<0?"r":d<=30?"w":"",t=d<0?`منتهٍ منذ ${-d} يوم`:d===0?"ينتهي اليوم":`متبقٍ ${d} يوم`,s=d<0?"❌ منتهي":d<=7?"🔴 ينتهي خلال 7 أيام":d<=30?"🟠 ينتهي خلال 30 يومًا":"🟢 ساري";
+   return docCard(f,`<div class="meta">📅 الانتهاء: ${f.exp} • <span class="badge ${c}">${s} • ${t}</span></div>${f.notes?`<div class="meta">📝 ${esc(f.notes)}</div>`:""}`)};
+  h=`<h2>🔄 التجديدات</h2>${reminders()}${A.length?A.map(row).join(""):`<div class="empty">لا توجد مستندات بتاريخ انتهاء. أضف التاريخ عبر ✏️ تعديل.</div>`}${B.length?`<h3>بدون تاريخ انتهاء</h3><div class="meta">لن تُولَّد تنبيهات لهذه المستندات (${B.length})</div>`:""}`;break}
+ case"fav":h=`<h2>⭐ المفضلة</h2>`+list(L.filter(f=>f.fav),"لا توجد مفضلة");break;
+ case"pin":{const pf=DB.folders.filter(x=>!x.del&&x.pin);h=`<h2>📌 الوصول السريع</h2>`+pf.map(x=>`<div class="card doc" data-a="openFolder" data-id="${x.id}">📁 ${esc(path(x.id))}</div>`).join("")+list(L.filter(f=>f.pin),pf.length?"":"لا توجد عناصر مثبّتة");break}
+ case"trash":{const tf=DB.folders.filter(x=>x.del&&!fld(x.parent)?.del||x.del&&fld(x.parent)?.del!==x.del),td=DB.files.filter(f=>f.del);
+  h=`<h2>🗑️ سلة المحذوفات</h2>${tf.length||td.length?`<button class="btn d" data-a="empty" style="margin-bottom:10px">إفراغ السلة</button>`:""}`+
+  tf.map(x=>`<div class="card"><div class="n">📁 ${esc(x.name)}</div><div class="meta">حُذف: ${fmtD(x.del)}</div><div class="acts"><button class="btn" data-a="resF" data-id="${x.id}">♻️ استعادة</button><button class="btn d" data-a="permF" data-id="${x.id}">حذف نهائي</button></div></div>`).join("")+
+  td.map(f=>`<div class="card"><div class="n">${esc(f.name)}</div><div class="meta">${size(f.size)} • حُذف: ${fmtD(f.del)}</div><div class="acts"><button class="btn" data-a="res" data-id="${f.id}">♻️ استعادة</button><button class="btn d" data-a="perm" data-id="${f.id}">حذف نهائي</button></div></div>`).join("")+(tf.length||td.length?"":`<div class="empty">السلة فارغة</div>`);break}
+ case"log":h=`<h2>📋 سجل النشاط</h2>`+(DB.log.length?DB.log.slice(0,300).map(l=>`<div class="card"><div class="n">${esc(l.desc)}</div><div class="meta">${esc(l.type)} • ${fmtD(l.t)}</div></div>`).join(""):`<div class="empty">لا يوجد نشاط بعد</div>`);break;
+ case"share":h=`<h2>📤 مشاركة عبر واتساب</h2><div class="meta" style="margin-bottom:8px">فتح واتساب لا يعني أن الملف أُرسل؛ التأكيد يأتي فقط من نافذة المشاركة في الجهاز.</div>`+(L.length?L.map(f=>`<div class="card"><label style="display:flex;gap:10px;align-items:center;min-height:44px"><input type="checkbox" data-a="sel" data-id="${f.id}" ${S.sel.has(f.id)?"checked":""}> ${esc(f.name)} <span class="meta">(${size(f.size)})</span></label></div>`).join("")+`<div class="acts"><button class="btn p" data-a="waSel">📤 واتساب (${S.sel.size})</button><button class="btn" data-a="shareSel">مشاركة عامة</button></div>`:`<div class="empty">لا توجد مستندات</div>`);break;
+ case"storage":h=`<h2>💾 التخزين</h2><div class="card" id="stg">جارٍ الحساب…</div>`;storageInfo().then(({u,q})=>{const tot=L.reduce((a,f)=>a+f.size,0),el=$("#stg");if(!el)return;const pc=q?u/q*100:0;el.innerHTML=`حجم مستندات التطبيق: <b>${size(tot)}</b><br>استخدام مصدر التطبيق (تقدير المتصفح): ${q?size(u)+" من "+size(q)+" ("+pc.toFixed(1)+"%)":"غير متاح"}<div class="bar" style="margin:8px 0"><div style="width:${Math.min(pc,100)}%"></div></div>${pc>80?`<span class="badge r">⚠️ اقتربت من حدّ التخزين</span>`:""}<div class="meta">هذه حصة المتصفح/WebView للتطبيق وليست سعة الجهاز.</div>`});
+  h+=`<div class="card">☁️ Google Drive: غير مفعّل<div class="meta">${DB.prefs.email?"البريد المُدخل يدويًا: "+esc(DB.prefs.email)+" (غير موثّق)":"لم يُدخل بريد"}</div></div>`;break;
+ case"status":{const p=DB.prefs;h=`<h2>📊 حالة التطبيق</h2><div class="card sync ${p.dirty?"w":""}">${p.dirty?"⚠️ توجد تغييرات غير محفوظة":"☁️ تمت المزامنة"}<div class="meta">آخر نسخة: ${p.lastBackup?fmtD(p.lastBackup):"لا يوجد"} • الحجم: ${p.backupSize?size(p.backupSize):"—"}</div></div>
+  <div class="card">الاتصال: ${navigator.onLine?"🟢 متصل":"🔴 دون اتصال"} (التطبيق يعمل محليًا في الحالتين)<br>المستندات: ${L.length} • المجلدات: ${DB.folders.filter(x=>!x.del).length} • الأنشطة: ${DB.log.length}</div>
+  <div class="acts"><button class="btn p" data-a="export">💾 تصدير نسخة JSON</button><button class="btn" data-a="import">📥 استيراد نسخة</button></div>`;break}
+ case"settings":h=`<h2>⚙️ الإعدادات</h2><div class="card"><b>🌗 السمة</b><div class="acts"><button class="btn" data-a="theme">تبديل ${DB.prefs.theme==="dark"?"إلى الفاتح":"إلى الداكن"}</button></div></div>
+  <div class="card"><b>☁️ Google Drive</b><label class="meta">البريد (إدخال يدوي فقط)</label><input id="em" type="email" value="${esc(DB.prefs.email)}" style="width:100%;min-height:44px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);padding:0 10px"><div class="meta">⚠️ إدخال البريد لا يربط Google Drive. المزامنة الفعلية تحتاج إعداد OAuth ومفتاح API، وهي غير مُعدّة في هذا الملف.</div><div class="acts"><button class="btn p" data-a="saveEm">حفظ</button></div></div>
+  <div class="card"><b>📲 حفظ التطبيق</b><div class="acts"><button class="btn p" data-a="saveApp">⬇️ حفظ التطبيق كملف HTML</button><button class="btn" data-a="install">📲 إضافة للشاشة الرئيسية</button></div><div class="meta">الملف المحفوظ يعمل دون إنترنت ويصلح لـ AppCreator24. بياناتك (المستندات) تُحفظ عبر «النسخ الاحتياطي» أدناه.</div></div>
+  <div class="card"><b>💾 النسخ الاحتياطي</b><div class="acts"><button class="btn p" data-a="export">تصدير JSON</button><button class="btn" data-a="import">استيراد JSON</button></div></div>`;break;
+ case"preview":{const f=F(S.id);if(!f){S.view="home";return render()}
+  h=`<h2>${esc(f.name)}</h2><div class="card meta">${size(f.size)} • ${fmtD(f.added)} • 📁 ${esc(path(f.folder))} • ${f.fav?"⭐ مفضل":"☆"}${f.desc?"<br>"+esc(f.desc):""}</div><div class="card pv" id="pv">جارٍ التحميل…</div>
+  <div class="acts"><button class="btn" data-a="go" data-id="files">⬅️ رجوع</button><button class="btn" data-a="edit" data-id="${f.id}">✏️ تعديل</button><button class="btn" data-a="fav" data-id="${f.id}">${f.fav?"⭐":"☆"}</button><button class="btn" data-a="wa" data-id="${f.id}">📤 واتساب</button><button class="btn" data-a="shr" data-id="${f.id}">مشاركة</button><button class="btn" data-a="dl" data-id="${f.id}">⬇️ تنزيل</button><button class="btn" data-a="mov" data-id="${f.id}">↪️ نقل</button></div>`;
+  m.innerHTML=h;preview(f);return}
+ }
+ m.innerHTML=h}
+async function preview(f){const b=await getBlob(f.id),el=$("#pv");if(!el)return;if(pvURL)URL.revokeObjectURL(pvURL);if(!b){el.textContent="المحتوى غير موجود";return}pvURL=URL.createObjectURL(b);
+ const t=f.type||b.type||"",n=f.name.toLowerCase();
+ if(t.startsWith("image/"))el.innerHTML=`<img src="${pvURL}" alt="">`;
+ else if(t==="application/pdf"||n.endsWith(".pdf"))el.innerHTML=`<iframe src="${pvURL}"></iframe><div class="meta">إن لم يظهر الملف في هذا المتصفح استخدم زر التنزيل.</div>`;
+ else if(t.startsWith("text/")||n.endsWith(".txt")){el.innerHTML=`<pre></pre>`;el.firstChild.textContent=(await b.text()).slice(0,50000)}
+ else el.innerHTML=`<div class="empty">📄 لا تتوفر معاينة لهذا النوع.<br><br><a class="btn p" href="${pvURL}" download="${esc(f.name)}" style="display:inline-flex;align-items:center;text-decoration:none">⬇️ تنزيل / فتح بتطبيق آخر</a></div>`}
+/* ---------- operations ---------- */
+async function addFiles(files){if(!files.length)return;let n=0;for(const file of files){const id=uid();try{await tx("blobs","readwrite",s=>s.put(file,id))}catch(e){alert("تعذّر حفظ «"+file.name+"»: مساحة التخزين غير كافية أو غير متاحة");continue}
+ DB.files.push({id,name:file.name,size:file.size,type:file.type,added:Date.now(),mod:Date.now(),folder:S.view==="files"?S.folder:null,tags:[],fav:false,pin:false,issue:"",exp:"",notes:"",desc:"",del:null});log("إضافة مستند","تمت إضافة: "+file.name);n++}
+ if(n)await commit()}
+function editDoc(id){const f=F(id);modal(`<h3>✏️ تعديل المعلومات</h3><label>الاسم</label><input id="e1" value="${esc(f.name)}"><label>الوصف</label><textarea id="e2">${esc(f.desc)}</textarea><label>الوسوم (مفصولة بفاصلة)</label><input id="e3" value="${esc(f.tags.join("، "))}"><label>تاريخ الإصدار</label><input id="e4" type="date" value="${f.issue}"><label>تاريخ الانتهاء</label><input id="e5" type="date" value="${f.exp}"><label>ملاحظات التجديد</label><textarea id="e6">${esc(f.notes)}</textarea>`,async()=>{const nm=val("e1").trim();if(!nm){toast("الاسم مطلوب");return false}
+ const old=f.name;f.name=nm;f.desc=val("e2");f.tags=val("e3").split(/[,،]/).map(s=>s.trim()).filter(Boolean);f.issue=val("e4");f.exp=val("e5");f.notes=val("e6");f.mod=Date.now();log("تعديل مستند",old===nm?"تم تعديل: "+nm:`إعادة تسمية: ${old} ← ${nm}`);await commit()})}
+function folderDlg(title,name,cb){modal(`<h3>${title}</h3><label>اسم المجلد</label><input id="fn" value="${esc(name||"")}">`,async()=>{const v=val("fn").trim();if(!v){toast("الاسم مطلوب");return false}await cb(v)})}
+const kids=id=>DB.folders.filter(x=>x.parent===id).flatMap(x=>[x.id,...kids(x.id)]);
+function delFolder(id){const x=fld(id),ids=[id,...kids(id)],nf=DB.files.filter(f=>!f.del&&ids.includes(f.folder)).length;
+ modal(`<h3>🗑️ حذف المجلد</h3><p>سيُنقل المجلد «${esc(x.name)}» وما بداخله (${nf} مستند و${ids.length-1} مجلد فرعي) إلى سلة المحذوفات ويمكن استعادتها.</p>`,async()=>{const t=Date.now();DB.folders.forEach(y=>{if(ids.includes(y.id)&&!y.del)y.del=t});DB.files.forEach(f=>{if(ids.includes(f.folder)&&!f.del)f.del=t});if(S.folder&&ids.includes(S.folder))S.folder=x.parent;log("حذف مجلد","تم حذف المجلد: "+x.name);await commit()},"نقل إلى السلة")}
+function confirmDlg(msg,fn,t){modal(`<p>${msg}</p>`,fn,t||"تأكيد")}
+async function perm(ids){for(const id of ids)await tx("blobs","readwrite",s=>s.delete(id))}
+async function shareFiles(ids,wa){if(!ids.length)return toast("اختر مستندًا أولًا");const fs=live().filter(f=>ids.includes(f.id));if(!fs.length)return;const files=[];for(const f of fs){const b=await getBlob(f.id);if(b)files.push(new File([b],f.name,{type:f.type||b.type}))}
+ try{if(navigator.canShare&&navigator.canShare({files})){await navigator.share({files,title:fs[0].name});log("مشاركة","فُتحت نافذة المشاركة: "+fs.map(f=>f.name).join("، "));await commit(0,1);return}}catch(e){if(e.name==="AbortError")return}
+ const txt="مستندات: "+fs.map(f=>f.name+" ("+size(f.size)+")").join("، "),q=encodeURIComponent(txt),lk='style="display:inline-flex;align-items:center;text-decoration:none"';
+ if(!wa&&navigator.share){try{await navigator.share({text:txt});return}catch(e){return}}
+ modal(`<h3>📤 مشاركة عبر واتساب</h3><p class="meta">مشاركة الملفات مباشرة غير مدعومة في هذه البيئة. سيُفتح واتساب برسالة نصية فقط (دون مرفق) ولن يُعدّ ذلك إرسالًا للملف؛ نزّل الملف من شاشة المعاينة وأرفقه يدويًا.</p><div class="acts"><a class="btn p" ${lk} href="https://wa.me/?text=${q}" target="_blank" rel="noopener">فتح واتساب</a><a class="btn" ${lk} href="whatsapp://send?text=${q}">رابط بديل</a></div>`,()=>true,"إغلاق")}
+async function exportB(){const files=[];for(const f of DB.files){const b=await getBlob(f.id);let d=null;if(b)d=await new Promise(r=>{const x=new FileReader();x.onload=()=>r(x.result);x.readAsDataURL(b)});files.push({...f,data:d})}
+ const out=JSON.stringify({app:"DocumentOrganizer",version:1,exported:Date.now(),folders:DB.folders,files,log:DB.log,prefs:{theme:DB.prefs.theme,email:DB.prefs.email}}),blob=new Blob([out],{type:"application/json"}),a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);a.download="document-organizer-backup-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();a.remove();
+ DB.prefs.lastBackup=Date.now();DB.prefs.dirty=false;DB.prefs.backupSize=blob.size;log("نسخة احتياطية","تم إنشاء نسخة احتياطية ("+size(blob.size)+")");await saveMeta();toast("تم تصدير النسخة الاحتياطية");render()}
+async function importB(file){let j;try{j=JSON.parse(await file.text())}catch(e){return alert("ملف غير صالح: ليس JSON")}
+ if(j.app!=="DocumentOrganizer"||!Array.isArray(j.files)||!Array.isArray(j.folders))return alert("بنية النسخة غير صحيحة أو حقولها ناقصة");
+ if(j.version!==1)return alert("إصدار النسخة غير مدعوم: "+j.version);
+ confirmDlg(`ستُستبدل جميع البيانات الحالية (${live().length} مستند) بمحتوى النسخة: ${j.files.length} مستند و${j.folders.length} مجلد. لا يمكن التراجع.`,async()=>{
+  await tx("blobs","readwrite",s=>s.clear());DB.files=[];for(const f of j.files){const d=f.data;delete f.data;if(d){const b=await (await fetch(d)).blob();await tx("blobs","readwrite",s=>s.put(b,f.id))}DB.files.push(f)}
+  DB.folders=j.folders;DB.log=j.log||[];if(j.prefs){DB.prefs.theme=j.prefs.theme||DB.prefs.theme;DB.prefs.email=j.prefs.email||""}S.folder=null;log("استعادة","تمت استعادة نسخة احتياطية");DB.prefs.dirty=false;DB.prefs.lastBackup=Date.now();await saveMeta();toast();render()},"استبدال واستعادة")}
+/* ---------- events ---------- */
+const go=v=>{S.view=v;S.q="";$("#q").value="";document.body.classList.remove("open");$("#fm").style.display="none";if(v==="files")S.folder=null;scrollTo(0,0);render()};
+document.addEventListener("click",async e=>{const t=e.target.closest("[data-a]");if(!t){$("#fm").style.display="none";return}
+ const a=t.dataset.a,id=t.dataset.id,f=F(id);if(a!=="fab")$("#fm").style.display="none";
+ switch(a){
+ case"menu":document.body.classList.add("open");break;case"close":document.body.classList.remove("open");break;
+ case"theme":DB.prefs.theme=DB.prefs.theme==="dark"?"light":"dark";await saveMeta();render();break;
+ case"fab":$("#fm").style.display=$("#fm").style.display==="block"?"none":"block";e.stopPropagation();break;
+ case"go":go(id);break;case"focusQ":$("#q").focus();break;
+ case"addFile":$("#fIn").click();break;case"addImg":$("#iIn").click();break;case"scan":$("#sIn").click();break;
+ case"newFolder":folderDlg("📁 مجلد جديد","",async n=>{DB.folders.push({id:uid(),name:n,parent:S.view==="files"?S.folder:null,pin:false,del:null});log("إنشاء مجلد","تم إنشاء المجلد: "+n);await commit()});break;
+ case"open":S.id=id;S.view="preview";S.q="";$("#q").value="";scrollTo(0,0);render();break;
+ case"openFolder":S.view="files";S.q="";$("#q").value="";S.folder=id||null;render();break;
+ case"goFolder":S.view="files";S.q="";$("#q").value="";S.folder=f.folder;render();break;
+ case"fav":f.fav=!f.fav;f.mod=Date.now();log("المفضلة",(f.fav?"إضافة للمفضلة: ":"إزالة من المفضلة: ")+f.name);await commit();break;
+ case"pin":f.pin=!f.pin;f.mod=Date.now();log("الوصول السريع",(f.pin?"تثبيت: ":"إلغاء تثبيت: ")+f.name);await commit();break;
+ case"pinF":{const x=fld(id);x.pin=!x.pin;log("الوصول السريع",(x.pin?"تثبيت المجلد: ":"إلغاء تثبيت المجلد: ")+x.name);await commit();break}
+ case"edit":editDoc(id);break;
+ case"del":confirmDlg(`نقل «${esc(f.name)}» إلى سلة المحذوفات؟`,async()=>{f.del=Date.now();log("حذف مستند","تم حذف: "+f.name);if(S.view==="preview")S.view="files";await commit()},"نقل للسلة");break;
+ case"res":{if(f.folder&&fld(f.folder)?.del)f.folder=null;f.del=null;f.mod=Date.now();log("استعادة","تمت استعادة: "+f.name);await commit();break}
+ case"perm":confirmDlg(`حذف «${esc(f.name)}» نهائيًا؟ لا يمكن التراجع.`,async()=>{await perm([id]);DB.files=DB.files.filter(x=>x.id!==id);log("حذف نهائي","حذف نهائي: "+f.name);await commit()},"حذف نهائي");break;
+ case"renF":{const x=fld(id);folderDlg("✏️ إعادة تسمية",x.name,async n=>{log("تعديل مجلد",`${x.name} ← ${n}`);x.name=n;await commit()});break}
+ case"delF":delFolder(id);break;
+ case"movF":{const ex=[id,...kids(id)];modal(`<h3>↪️ نقل المجلد</h3><select id="mv">${folderOpts(fld(id).parent).split("</option>").filter(o=>!ex.some(i=>o.includes(`value="${i}"`))).join("</option>")}</select>`,async()=>{const x=fld(id);x.parent=val("mv")||null;log("نقل مجلد","تم نقل المجلد: "+x.name);await commit()},"نقل");break}
+ case"resF":{const x=fld(id),ts=x.del;if(fld(x.parent)?.del)x.parent=null;DB.folders.forEach(y=>{if(y.del===ts)y.del=null});DB.files.forEach(y=>{if(y.del===ts)y.del=null});log("استعادة","تمت استعادة المجلد: "+x.name);await commit();break}
+ case"permF":confirmDlg("حذف المجلد وكل محتوياته نهائيًا؟",async()=>{const ts=fld(id).del,fs=DB.files.filter(y=>y.del===ts).map(y=>y.id);await perm(fs);DB.files=DB.files.filter(y=>y.del!==ts);DB.folders=DB.folders.filter(y=>y.del!==ts);log("حذف نهائي","حذف مجلد نهائيًا");await commit()},"حذف نهائي");break;
+ case"empty":confirmDlg("إفراغ السلة نهائيًا؟ لا يمكن التراجع.",async()=>{await perm(DB.files.filter(y=>y.del).map(y=>y.id));DB.files=DB.files.filter(y=>!y.del);DB.folders=DB.folders.filter(y=>!y.del);log("إفراغ السلة","تم إفراغ سلة المحذوفات");await commit()},"إفراغ");break;
+ case"mov":modal(`<h3>↪️ نقل المستند</h3><select id="mv">${folderOpts(f.folder)}</select>`,async()=>{f.folder=val("mv")||null;f.mod=Date.now();log("نقل مستند","تم نقل: "+f.name+" إلى "+path(f.folder));await commit()},"نقل");break;
+ case"wa":shareFiles([id],true);break;case"shr":shareFiles([id],false);break;
+ case"sel":t.checked?S.sel.add(id):S.sel.delete(id);render();break;
+ case"waSel":shareFiles([...S.sel],true);break;case"shareSel":shareFiles([...S.sel],false);break;
+ case"dl":{const b=await getBlob(id),x=document.createElement("a");x.href=URL.createObjectURL(b);x.download=f.name;document.body.appendChild(x);x.click();x.remove();break}
+ case"saveEm":DB.prefs.email=val("em").trim();log("إعدادات","حفظ بريد يدوي (غير موثّق)");await commit();break;
+ case"saveApp":{const c=document.documentElement.cloneNode(true);c.querySelector("#main").innerHTML="";c.querySelector("#dr").innerHTML="";c.querySelector("#mb").innerHTML="";c.querySelector("body").className="";c.querySelector("#md").removeAttribute("style");c.querySelector("#toast").removeAttribute("style");c.querySelector("#fm").removeAttribute("style");
+  const blob=new Blob(["<!DOCTYPE html>\n"+c.outerHTML],{type:"text/html"}),x=document.createElement("a");x.href=URL.createObjectURL(blob);x.download="document-organizer.html";document.body.appendChild(x);x.click();x.remove();toast("بدأ تنزيل الملف");
+  setTimeout(()=>modal(`<p>إذا لم يبدأ التنزيل، افتح التطبيق في Chrome (⋮ ← فتح في المتصفح) ثم أعد المحاولة، أو استخدم ⋮ ← إضافة إلى الشاشة الرئيسية.</p>`,()=>true,"حسنًا"),1200);break}
+ case"install":if(window._dip){window._dip.prompt()}else modal(`<p>في Chrome: اضغط ⋮ ثم «إضافة إلى الشاشة الرئيسية». من داخل معاينة Claude اختر أولًا «Open in browser».</p>`,()=>true,"حسنًا");break;
+ case"export":exportB();break;case"import":$("#bIn").click();break;
+ }});
+$("#q").addEventListener("input",e=>{S.q=e.target.value;render()});
+for(const i of["fIn","iIn","sIn"])$("#"+i).addEventListener("change",async e=>{await addFiles([...e.target.files]);e.target.value=""});
+$("#bIn").addEventListener("change",e=>{if(e.target.files[0])importB(e.target.files[0]);e.target.value=""});
+let sx=null;document.addEventListener("touchstart",e=>sx=e.touches[0].clientX,{passive:true});
+document.addEventListener("touchend",e=>{if(sx===null)return;const d=e.changedTouches[0].clientX-sx;if(document.body.classList.contains("open")&&d>60)document.body.classList.remove("open");sx=null},{passive:true});
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();window._dip=e});
+window.addEventListener("online",render);window.addEventListener("offline",render);
+(async()=>{try{idb=await open();const d=await tx("meta","readonly",s=>s.get("db"));if(d){DB=Object.assign(DB,d);DB.prefs=Object.assign({theme:"dark",email:"",lastBackup:null,dirty:false,backupSize:0},d.prefs)}
+ if(navigator.storage?.persist)navigator.storage.persist().catch(()=>{})}catch(e){idb=null}
+ render()})();
+</script>
+</body>
+</html>
